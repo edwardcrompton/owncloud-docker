@@ -1,37 +1,38 @@
 # Composition of the containers
 
-owncloud:
-  image: owncloud
-  ports:
-   - 8099:80
-   - 44399:443
-  volumes_from:
-    - owncloud-data
-  links:
-   - postgres:owncloud-db
+php:
+  build: docker/php
   hostname: oc
   domainname: oc.tuttlemail.co.uk # Change to the hostname you will use
 
-postgres:
-  image: postgres
-  environment:
-    - POSTGRES_PASSWORD=mysecretpassword
-  volumes_from:
-    - postgres-data
+nginx:
+  build: docker/nginx
+  ports:
+    - 80:8080
 
-postgres-data:
-  image: postgres
-  # This is a data container, so we want to exit as soon as the container is created
-  command: /bin/true
-  volumes:
-    - /etc/postgresql
-    - /var/lib/postgresql
+db:
+  build: docker/mariadb
 
-owncloud-data:
-  image: owncloud
-  # This is a data container, so we want to exit as soon as the container is created
-  # BUT we will have to fix permissions issues first (33 is the ID of the www-data user)
-  command: /bin/bash -c "/bin/chown -R 33 /var/www/html/data && /bin/chown -R 33 /var/www/html/config"
-  volumes:
-    - /var/www/html/data
-    - /var/www/html/config
+#postgres:
+#  image: postgres
+#  environment:
+#    - POSTGRES_PASSWORD=mysecretpassword
+#  volumes_from:
+#    - postgres-data
+#
+#postgres-data:
+#  image: postgres
+#  # This is a data container, so we want to exit as soon as the container is created
+#  command: /bin/true
+#  volumes:
+#    - /etc/postgresql
+#    - /var/lib/postgresql
+#
+#owncloud-data:
+#  image: owncloud
+#  # This is a data container, so we want to exit as soon as the container is created
+#  # BUT we will have to fix permissions issues first (33 is the ID of the www-data user)
+#  command: /bin/bash -c "/bin/chown -R 33 /var/www/html/data && /bin/chown -R 33 /var/www/html/config"
+#  volumes:
+#    - /var/www/html/data
+#    - /var/www/html/config
