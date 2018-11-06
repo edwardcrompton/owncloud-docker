@@ -2,11 +2,11 @@
 
 php:
   build: docker/php
-  hostname: oc
-  domainname: oc.tuttlemail.co.uk # Change to the hostname you will use
+  volumes:
+    - .:/app
 
 nginx:
-  image: arm32v7/nginx 
+  build: docker/nginx
   ports:
     - "80:80"
     - "443:443"
@@ -14,8 +14,7 @@ nginx:
     - NGINX_HOST=oc.tuttlemail.co.uk
     - NGINX_PORT=80
   volumes:
-    ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    .:/app
+    - .:/app
 
 db:
   image: arm32v7/postgres

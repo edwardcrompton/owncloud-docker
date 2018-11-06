@@ -1,2 +1,2 @@
-FROM resin/armhf-alpine
-RUN apt-get install nginx
+FROM arm32v7/nginx
+COPY nginx.conf /etc/nginx/nginx.conf
